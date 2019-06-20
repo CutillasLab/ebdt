@@ -1,0 +1,7 @@
+*.xlsm
+.ipynb_checkpoints/
+vba/
+sites.txt
+./listOfKinases.csv
+*.ipynb
+__pycache__/
