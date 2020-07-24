@@ -72,9 +72,6 @@ def GetExpectancyOfBeingDownstreamTarget(inhibitionThreshold, ratioThreshold, pr
 		cellLineWb.save(cellLinesFiles[i])
 		
 def getDataForKusterCompounds(cellLineWb, listOfCompounds, numCompounds):
-	# An excel file called "KusterDiscoverX_inhi_specificity_combined_b.xlsm" is required. This file must include the "combined_spec_unique_only" worksheet.
-	# To do: We should either include this file with the code, or specify the format of this file and its worksheets.
-
 	# Whilst we're here we can create the new worksheets called "pvalue.select" and "fold.select"
 	if 'pvalue.select' not in cellLineWb.sheetnames:
 		cellLineWb.create_sheet('pvalue.select')
@@ -84,7 +81,7 @@ def getDataForKusterCompounds(cellLineWb, listOfCompounds, numCompounds):
 	wsFValues = cellLineWb["fold"]
 
 	# Let's create the dictionary which will link the compound names listed in listOfCompounds to the coumn headings in the cell line file
-	compoundsCellLine = {cellLineHeading.value.split(".")[1]: cellLineHeading.value for cellLineHeading in list(wsFValues.rows)[0][3:len(listOfCompounds)+3]}
+	compoundsCellLine = {cellLineHeading.value.split(".")[1]: cellLineHeading.value for cellLineHeading in list(wsFValues.rows)[0][2:len(listOfCompounds)+2]}
 
 	fValues = {}
 	pValues = {}
@@ -95,7 +92,7 @@ def getDataForKusterCompounds(cellLineWb, listOfCompounds, numCompounds):
 	compoundHeadings = list(compoundsCellLine.keys())
 	for j,row in enumerate(list(wsFValues)[1:]):
 		siteDict = {}
-		for i, cell in enumerate(row[3:len(compoundsCellLine)+3]):
+		for i, cell in enumerate(row[2:len(compoundsCellLine)+2]):
 			siteDict[compoundHeadings[i]] = float(cell.value)
 		fValues[row[0].value] = siteDict
 
@@ -103,12 +100,12 @@ def getDataForKusterCompounds(cellLineWb, listOfCompounds, numCompounds):
 	wsPValues = cellLineWb["pvalue"]
 	for row in list(wsPValues)[1:]:
 		siteDict = {}
-		for i, cell in enumerate(row[3:len(compoundsCellLine)+3]):
+		for i, cell in enumerate(row[2:len(compoundsCellLine)+2]):
 			siteDict[compoundHeadings[i]] = float(cell.value)
 		pValues[row[0].value] = siteDict
 
 	for row in list(wsPValues)[1:]:
-		fdrValues[row[0].value] = float(row[2].value or 0)
+		fdrValues[row[0].value] = float(row[1].value or 0)
 
 	return fValues, pValues, fdrValues, compoundsCellLine, sitesCellLine
 
